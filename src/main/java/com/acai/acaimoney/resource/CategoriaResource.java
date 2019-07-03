@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,16 +35,15 @@ public class CategoriaResource {
 	}
 	
 	@PostMapping	
-	public ResponseEntity salvar(@RequestBody Categoria categoria, HttpServletResponse response){
+	public ResponseEntity salvar(@Valid @RequestBody Categoria categoria, HttpServletResponse response){
 		Categoria categoriaSalva = categoriaRepository.save(categoria);		
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").
 				buildAndExpand(categoriaSalva.getId()).toUri();
-		response.setHeader("Location", uri.toASCIIString());
-		
+		response.setHeader("Location", uri.toASCIIString());		
 		return ResponseEntity.created(uri).body(categoriaSalva);
 	}
-	
+		
 	@GetMapping("/{id}")
 	public ResponseEntity buscarPeloId(@PathVariable Long id) {
 		Optional categoria = categoriaRepository.findById(id);
