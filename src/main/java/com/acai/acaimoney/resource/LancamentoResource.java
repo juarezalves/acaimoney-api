@@ -27,6 +27,7 @@ import com.acai.acaimoney.evento.RecursoCriadoEvento;
 import com.acai.acaimoney.exceptionhandler.AlgaMoneyExceptionHandler.Erro;
 import com.acai.acaimoney.model.Lancamento;
 import com.acai.acaimoney.repository.LancamentoRepository;
+import com.acai.acaimoney.repository.filter.LancamentoFilter;
 import com.acai.acaimoney.service.LancamentoService;
 import com.acai.acaimoney.service.exception.PessoaInexistenteOuInativaException;
 
@@ -47,8 +48,8 @@ public class LancamentoResource {
 	private MessageSource messageSource;
 
 	@GetMapping
-	public List<Lancamento> listar(){
-		return lancamentoRepository.findAll();
+	public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter){
+		return lancamentoRepository.filtrar(lancamentoFilter);
 	}
 	
 	@GetMapping("/{id}")
@@ -63,6 +64,10 @@ public class LancamentoResource {
 		Lancamento lancamentoSalvo = lancamentoService.salvar(lancamento);
 		publisher.publishEvent(new RecursoCriadoEvento(this, response, lancamento.getId()));
 		return ResponseEntity.status(HttpStatus.CREATED).body(lancamentoSalvo);
+	}
+	
+	public void remover() {
+		
 	}
 	
 	@ExceptionHandler({PessoaInexistenteOuInativaException.class})
